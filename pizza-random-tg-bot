@@ -1,0 +1,33 @@
+from aiogram import types, executor, Bot, Dispatcher
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from random import choice
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+pizza = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton('pizza photo 🍕')
+        ]
+    ]
+)
+
+bot = Bot(token='6318818315:AAHI5NDvzr-osZ7OG6UgD1jXVsTVWmnEp4U')
+storage = MemoryStorage()
+dp = Dispatcher(bot=bot, storage=storage)
+
+@dp.message_handler(text='/start')
+async def cmd_start(message: types.Message):
+    await message.answer('pizza rasmlarini ko`rish uchun pastdagi tugmani bosing', reply_markup=pizza)
+
+
+@dp.message_handler(text='pizza photo 🍕')
+async def cmd_send_pizza(message: types.Message):
+    photos = ['pizza.jpg','qiz.jpg','pizzar.jpg','P.jpg','G.jpg','pi.jpg','piz.jpg','sir.jpg','pirok.jpg','pizzzzz.jpg','pizzar.jpg','qiz.jpg','Q.jpg','G.jpg']
+    p = choice(photos)
+    photo = open(f"photo/{p}", 'rb')
+
+    await message.answer_photo(photo=photo)
+    photo.close()
+
+
+if __name__ == "__main__":
+    executor.start_polling(dp, skip_updates=True)
